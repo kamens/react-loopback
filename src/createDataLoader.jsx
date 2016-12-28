@@ -138,13 +138,15 @@ export function createDataLoader(Component, options = {}) {
           autoLoad = true,
           transform = 'array'
         }) => {
-          // Remove leading slash
-          if (endpoint.slice(0, 1) === '/') {
-            endpoint = endpoint.slice(1);
-          }
-          // Remove trailing slash
-          if (endpoint.slice(-1) === '/') {
-            endpoint = endpoint.slice(0,-1);
+          if (typeof endpoint === 'string') {
+            // Remove leading slash
+            if (endpoint.slice(0, 1) === '/') {
+              endpoint = endpoint.slice(1);
+            }
+            // Remove trailing slash
+            if (endpoint.slice(-1) === '/') {
+              endpoint = endpoint.slice(0,-1);
+            }
           }
 
           if (typeof transform === 'string') {
@@ -275,7 +277,11 @@ export function createDataLoader(Component, options = {}) {
         return;
       }
 
-      const url = DataLoader._buildUrl(cfg.endpoint, filter);
+      const endpoint = typeof cfg.endpoint === 'function' ?
+        cfg.endpoint.apply(this) :
+        cfg.endpoint;
+
+      const url = DataLoader._buildUrl(endpoint, filter);
 
       const status = cfg.name + '_status';
       this._data[status] = 'loading';
