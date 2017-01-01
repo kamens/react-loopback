@@ -287,7 +287,7 @@ export function createDataLoader(Component, options = {}) {
       this._data[status] = 'loading';
       this.forceUpdate();
 
-      fetch(url)
+      fetch(url, {credentials: 'include'})
         .then(response => {
           if (!response.ok) throw new Error(response.statusText);
           return response.json();
